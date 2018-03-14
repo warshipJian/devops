@@ -1,2 +1,48 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #coding:utf8
+
+import os
+import sys
+import argparse
+
+aly = {
+    "xg":{"ip":"1.2.3.4",
+          "port":"2244"},
+}
+hosts = {'aly':aly}
+
+
+def login(ip,port,user):
+    os.system('ssh -p%d %s@%s' % (port,user,ip))
+
+def get_args():
+    parser = argparse.ArgumentParser(description='an ssh login script.')
+    parser.add_argument('location', metavar='l', type=str, help='server location: aly,lan...')
+    return parser.parse_args()
+
+def main():
+    port = 22
+    user = 'root'
+    exitInfo = 'bon jovi'
+    args = get_args()
+    hostTag = args.location
+    hostTag = hostTag.split('.')
+    if len(hostTag) < 2:
+        sys.exit(exitInfo)
+    host = hostTag[0]
+    ipTag = hostTag[1]
+    if host not in hosts:
+        sys.exit(exitInfo)
+    hostInfo = hosts[host]
+    if ipTag not in hostInfo:
+        sys.exit(exitInfo)
+    ipInfo = hostInfo[ipTag]
+    ip = ipInfo['ip']
+    if 'port' in ipInfo:
+        port = ipInfo['port']
+    if 'user' in ipInfo:
+        user = ipInfo['user']
+    login(ip,int(port),user)
+
+if __name__ == '__main__':
+    main()
