@@ -6,7 +6,7 @@
 """
 
 #$Id$#
-__author__ = 'xiaoguo <guoyuanjian@findlaw.cn>'
+__author__ = 'warshipJian'
 __version__ = '$Revision: 0.1 $'
 
 import os

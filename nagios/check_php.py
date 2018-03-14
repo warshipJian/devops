@@ -7,7 +7,7 @@ check host SSH port,check host ping status
 """
 
 #$Id$#
-__author__ = 'xiaoguo <1165205343@qq.com>'
+__author__ = 'warshipJian'
 __version__ = '$Revision: 0.2 $'
   
 import os

@@ -2,6 +2,10 @@
 # coding:utf8
 ''' check supervisord status'''
 
+#$Id$#
+__author__ = 'warshipJian'
+__version__ = '$Revision: 0.2 $'
+
 import re
 import sys
 
