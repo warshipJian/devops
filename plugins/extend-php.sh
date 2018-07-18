@@ -1,6 +1,8 @@
 #!/bin/bash
 #
 #
+# test abc def
+# j
 
 #redis
 mkdir ~/software
