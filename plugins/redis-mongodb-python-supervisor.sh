@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 橙石软件部署
+# 部署
 #
 #
 # redis mongodb tmux
