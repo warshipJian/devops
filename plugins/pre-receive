@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+#coding:utf8
+import re
+import os
+import sys
+import fileinput
+import subprocess
+
+def checkphp(filename):
+    files = '/tmp/hooks/%s' % filename
+    cmd = '/home/git/vendor/bin/phplint %s' % files
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    status = p.wait()
+    result = p.stdout.read().split('\n\n')[-1]
+    info =  re.sub("/tmp/hooks/","", result)
+    return status,info
+
+def main():
+    tmp = []
+    for line in fileinput.input():
+         tmp.append(line.strip('\n'))
+
+    data = tmp[0].split()
+    old = data[0]
+    new = data[1]
+    state = 0
+
+    staged_cmd = 'git diff --name-status %s %s' % (old,new)
+    proc = subprocess.Popen(staged_cmd, shell=True, stdout=subprocess.PIPE)
+    with proc.stdout as std_out:
+        for staged in std_out.readlines():
+            staged = staged.split()
+            staged_file = staged[1]
+            tag = staged[0]
+            directory = os.path.dirname('/tmp/hooks/%s' % staged_file)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            if tag != 'D' and re.match('.*.php', staged_file):
+                content = os.popen('git show %s:%s' % (new,staged_file)).read()
+                openfile = open('/tmp/hooks/%s' % staged_file, 'w')
+                openfile.write(content)
+                openfile.close()
+                status,info = checkphp(staged_file)
+                if status == 1:
+                    print '=================== error =======================' 
+                    print info
+                    state = 1
+    sys.exit(state) 
+
+if __name__ == '__main__':
+    main()
